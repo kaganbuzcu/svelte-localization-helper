@@ -8,13 +8,15 @@
     Button,
     Icon,
   } from "svelte-materialify";
-  import { mdiContentCopy } from "@mdi/js";
+  import { mdiContentCopy, mdiFileExportOutline } from "@mdi/js";
   import Clipboard from "svelte-clipboard";
   import Highlight from "svelte-highlight";
   import javascript from "svelte-highlight/src/languages/javascript";
   import atomOneDark from "svelte-highlight/src/styles/atom-one-dark";
+  import { DataTable } from "../../components";
+  import { csvGenerator } from "../../utils/helpers/CsvGenerator";
 
-  let url = "https://salty-spire-28150.herokuapp.com/api/v1/translate";
+  let url = "http://localhost:8000/api/v1/translate";
 
   let scopeValue = "";
   let keyValue = "";
@@ -24,6 +26,7 @@
   let outputLanguage2 = ".";
   let messages = `/* */`;
   let defineMessages = "";
+  let bodyRows = [];
 
   function handleLanguage2(event) {
     if (event.key === "Enter") {
@@ -62,6 +65,14 @@ export default defineMessages({
 });
       `;
 
+      bodyRows = [
+        ...bodyRows,
+        {
+          Key: keyValue,
+          language1: language1,
+          language2: language2,
+        },
+      ];
       keyValue = "";
       language1 = "";
       language2 = "";
@@ -79,7 +90,16 @@ export default defineMessages({
       language2 = data;
     }
   }
+
+  function downloadCSVHandler() {
+    let tableKeys = Object.keys(bodyRows[0]); //extract key names from first Object
+    csvGenerator(bodyRows, tableKeys, tableKeys, "svelte_csv_demo.csv");
+  }
 </script>
+
+<svelte:head>
+  {@html atomOneDark}
+</svelte:head>
 
 <Container fluid>
   <Row>
@@ -187,11 +207,17 @@ export default defineMessages({
       </div>
       <Highlight language={javascript} code={messages} />
     </Col>
+    <Col>
+      <div class="copy-button-wrapper">
+        <h6 class="mb-3 mt-6">CSV Output</h6>
+        <Button on:click={downloadCSVHandler} fab size="small">
+          <Icon path={mdiFileExportOutline} />
+        </Button>
+      </div>
+      <DataTable headCells={["Key", "language1", "language2"]} {bodyRows} />
+    </Col>
   </Row>
 </Container>
-<svelte:head>
-  {@html atomOneDark}
-</svelte:head>
 
 <style>
   :global(textarea) {
