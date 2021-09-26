@@ -7,6 +7,8 @@
     TextField,
     Button,
     Icon,
+    Tooltip,
+    ProgressCircular,
   } from "svelte-materialify";
   import { mdiContentCopy, mdiFileExportOutline } from "@mdi/js";
   import Clipboard from "svelte-clipboard";
@@ -27,6 +29,8 @@
   let messages = `/* */`;
   let defineMessages = "";
   let bodyRows = [];
+  let tooltipShow = false;
+  let translationSuggestion = "";
 
   function handleLanguage2(event) {
     if (event.key === "Enter") {
@@ -76,18 +80,33 @@ export default defineMessages({
       keyValue = "";
       language1 = "";
       language2 = "";
+      tooltipShow = false;
+      translationSuggestion = "";
       document.getElementById("keyInput").focus();
+    } else if (
+      event.key === "Tab" &&
+      translationSuggestion !== "" &&
+      translationSuggestion !== "loading"
+    ) {
+      language2 = translationSuggestion;
+      tooltipShow = false;
+      translationSuggestion = "";
+      setTimeout(() => {
+        document.getElementById("language2Input").focus();
+      }, 100);
     }
   }
 
   async function onBlurLanguage1() {
     if (!!language1) {
+      tooltipShow = true;
+      translationSuggestion = "loading";
       const res = await fetch(`${url}?text=${language1}&from=tr&to=en`, {
         method: "GET",
       });
 
       const data = await res.json();
-      language2 = data;
+      translationSuggestion = data;
     }
   }
 
@@ -137,9 +156,17 @@ export default defineMessages({
       <TextField
         bind:value={language2}
         on:keydown={handleLanguage2}
+        id="language2Input"
         placeholder="value"
         outlined>English</TextField
       >
+      <Tooltip bind:active={tooltipShow}>
+        {#if translationSuggestion === "loading"}
+          <ProgressCircular indeterminate color="indigo" />
+        {:else}
+          <span>{translationSuggestion}</span>
+        {/if}
+      </Tooltip>
     </Col>
   </Row>
 
