@@ -1,4 +1,5 @@
-import CopyToClipboard from './CopyToClipboard';
-import DataTable from './DataTable';
+import LanguageSelection from './languageSelection';
+import DataTable from './dataTable';
+import AutoComplete from './autoComplete';
 
-export { CopyToClipboard, DataTable }
+export { LanguageSelection, DataTable, AutoComplete }

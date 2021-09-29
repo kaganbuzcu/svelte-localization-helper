@@ -15,11 +15,21 @@
   import Highlight from "svelte-highlight";
   import javascript from "svelte-highlight/src/languages/javascript";
   import atomOneDark from "svelte-highlight/src/styles/atom-one-dark";
+  import { LanguageSelection } from "../../components";
   import { DataTable } from "../../components";
   import { csvGenerator } from "../../utils/helpers/CsvGenerator";
+  import {
+    setLocalStorage,
+    getLocalStorage,
+  } from "../../utils/helpers/LocalStorage";
 
   let url = "http://localhost:8000/api/v1/translate";
 
+  let languages_details = getLocalStorage("languages_details") || {
+    current: { shortName: "tr", name: "Turkish" },
+    second: { shortName: "en", name: "English" },
+  };
+  
   let scopeValue = "";
   let keyValue = "";
   let language1 = "";
@@ -31,6 +41,15 @@
   let bodyRows = [];
   let tooltipShow = false;
   let translationSuggestion = "";
+
+  function changeLanguages(languages) {
+    setLocalStorage("languages_details", languages.detail);
+    const { current, second } = languages.detail;
+    languages_details = {
+      current: { shortName: current.shortName, name: current.name },
+      second: { shortName: second.shortName, name: second.name },
+    };
+  }
 
   function handleLanguage2(event) {
     if (event.key === "Enter") {
@@ -101,9 +120,12 @@ export default defineMessages({
     if (!!language1) {
       tooltipShow = true;
       translationSuggestion = "loading";
-      const res = await fetch(`${url}?text=${language1}&from=tr&to=en`, {
-        method: "GET",
-      });
+      const res = await fetch(
+        `${url}?text=${language1}&from=${languages_details.current.shortName}&to=${languages_details.second.shortName}`,
+        {
+          method: "GET",
+        }
+      );
 
       const data = await res.json();
       translationSuggestion = data;
@@ -119,6 +141,8 @@ export default defineMessages({
 <svelte:head>
   {@html atomOneDark}
 </svelte:head>
+
+<LanguageSelection {languages_details} on:languagesChanged={changeLanguages} />
 
 <Container fluid>
   <Row>
@@ -143,22 +167,22 @@ export default defineMessages({
       >
     </Col>
     <Col>
-      <h6 class="mb-3 mt-6">Language 1</h6>
+      <h6 class="mb-3 mt-6">{languages_details.current.name}</h6>
       <TextField
         bind:value={language1}
         on:blur={onBlurLanguage1}
         placeholder="value"
-        outlined>Turkish</TextField
+        outlined>Current Language</TextField
       >
     </Col>
     <Col>
-      <h6 class="mb-3 mt-6">Language 2</h6>
+      <h6 class="mb-3 mt-6">{languages_details.second.name}</h6>
       <TextField
         bind:value={language2}
         on:keydown={handleLanguage2}
         id="language2Input"
         placeholder="value"
-        outlined>English</TextField
+        outlined>Second Language</TextField
       >
       <Tooltip bind:active={tooltipShow}>
         {#if translationSuggestion === "loading"}
@@ -173,7 +197,9 @@ export default defineMessages({
   <Row>
     <Col>
       <div class="copy-button-wrapper">
-        <h6 class="mb-3 mt-6">Global translations for language 1</h6>
+        <h6 class="mb-3 mt-6">
+          Global translations for {languages_details.current.name}
+        </h6>
         <Clipboard
           text={outputLanguage1}
           let:copy
@@ -195,7 +221,9 @@ export default defineMessages({
     </Col>
     <Col>
       <div class="copy-button-wrapper">
-        <h6 class="mb-3 mt-6">Global translations for language 2</h6>
+        <h6 class="mb-3 mt-6">
+          Global translations for {languages_details.second.name}
+        </h6>
         <Clipboard
           text={outputLanguage2}
           let:copy
