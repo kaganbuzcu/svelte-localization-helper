@@ -15,20 +15,21 @@
   import Highlight from "svelte-highlight";
   import javascript from "svelte-highlight/src/languages/javascript";
   import atomOneDark from "svelte-highlight/src/styles/atom-one-dark";
-  import { LanguageSelection, DataTable } from "../../components";
+  import { LanguageSelection } from "../../components";
+  import DataTable from "../../components/dataTable/DataTable.svelte";
   import { csvGenerator } from "../../utils/helpers/CsvGenerator";
   import {
     setLocalStorage,
     getLocalStorage,
   } from "../../utils/helpers/LocalStorage";
 
-  let url = "http://localhost:8000/api/v1/translate";
+  let url = "https://salty-spire-28150.herokuapp.com/api/v1/translate";
 
   let languages_details = getLocalStorage("languages_details") || {
     current: { shortName: "tr", name: "Turkish" },
     second: { shortName: "en", name: "English" },
   };
-  
+
   let scopeValue = "";
   let keyValue = "";
   let language1 = "";
