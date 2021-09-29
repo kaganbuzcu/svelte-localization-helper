@@ -33,7 +33,7 @@
   <List class="elevation-2" style="padding: 0px !important; overflow-y">
     <h6 class="mb-3 mt-6">{inputDescription}</h6>
     <TextField
-      value={selectedValue}
+      bind:value={selectedValue}
       on:input={handleSearch}
       placeholder={inputPlaceholder}
       outlined>{inputLabel}</TextField

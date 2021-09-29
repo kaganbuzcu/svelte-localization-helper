@@ -28,7 +28,7 @@
     current: { shortName: "tr", name: "Turkish" },
     second: { shortName: "en", name: "English" },
   };
-  
+
   let scopeValue = "";
   let keyValue = "";
   let language1 = "";
@@ -179,16 +179,19 @@ export default defineMessages({
       <TextField
         bind:value={language2}
         on:keydown={handleLanguage2}
+        on:blur={() => (tooltipShow = false)}
         id="language2Input"
         placeholder="value"
         outlined>Second Language</TextField
       >
-      <Tooltip bind:active={tooltipShow}>
-        {#if translationSuggestion === "loading"}
-          <ProgressCircular indeterminate color="indigo" />
-        {:else}
-          <span>{translationSuggestion}</span>
-        {/if}
+      <Tooltip right bind:active={tooltipShow} color="#212121">
+        <div slot="tip">
+          {#if translationSuggestion === "loading"}
+            <ProgressCircular indeterminate color="indigo" />
+          {:else}
+            <span>{translationSuggestion}</span>
+          {/if}
+        </div>
       </Tooltip>
     </Col>
   </Row>
