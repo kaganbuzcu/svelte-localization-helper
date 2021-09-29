@@ -9,7 +9,7 @@ const setLocalStorage = (key, value) =>
  * @param {String} key
  */
 const getLocalStorage = (key = '') =>
-  localStorage.getItem(key) || '{}'
+  JSON.parse(localStorage.getItem(key)) || null
 
 /**
  * @param {String} key
