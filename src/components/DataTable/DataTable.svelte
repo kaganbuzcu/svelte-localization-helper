@@ -4,26 +4,24 @@
 </script>
 
 <div class="container">
-  <div class="main">
-    <table>
-      <thead>
+  <table>
+    <thead>
+      <tr>
+        {#each headCells as head}
+          <th>{head}</th>
+        {/each}
+      </tr>
+    </thead>
+    <tbody>
+      {#each bodyRows as bodyElement}
         <tr>
           {#each headCells as head}
-            <th>{head}</th>
+            <td>{bodyElement[head] || "-"}</td>
           {/each}
         </tr>
-      </thead>
-      <tbody>
-        {#each bodyRows as bodyElement}
-          <tr>
-            {#each headCells as head}
-              <td>{bodyElement[head] || "-"}</td>
-            {/each}
-          </tr>
-        {/each}
-      </tbody>
-    </table>
-  </div>
+      {/each}
+    </tbody>
+  </table>
 </div>
 
 <style>
