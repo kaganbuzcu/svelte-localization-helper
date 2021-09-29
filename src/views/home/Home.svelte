@@ -15,8 +15,7 @@
   import Highlight from "svelte-highlight";
   import javascript from "svelte-highlight/src/languages/javascript";
   import atomOneDark from "svelte-highlight/src/styles/atom-one-dark";
-  import { LanguageSelection } from "../../components";
-  import DataTable from "../../components/dataTable/DataTable.svelte";
+  import { LanguageSelection, DataTable } from "../../components";
   import { csvGenerator } from "../../utils/helpers/CsvGenerator";
   import {
     setLocalStorage,
@@ -29,7 +28,7 @@
     current: { shortName: "tr", name: "Turkish" },
     second: { shortName: "en", name: "English" },
   };
-
+  
   let scopeValue = "";
   let keyValue = "";
   let language1 = "";
