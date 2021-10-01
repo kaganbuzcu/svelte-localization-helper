@@ -1,5 +1,11 @@
-## Project details (Turkish)
-[Repo](https://github.com/kaganbuzcu/okr-markdown)
+# Svelte Localization Helper
+
+Project [details](https://github.com/kaganbuzcu/okr-markdown) (Turkish)
+<br />
+<br />
+Used [Translatte](https://github.com/extensionsapp/translatte) for translation suggestions.
+<br />
+<br />
 
 ### Live Demo
 [Let me try](https://svelte-localization-helper.vercel.app/)
